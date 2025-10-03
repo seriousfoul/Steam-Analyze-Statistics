@@ -1,0 +1,283 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>STEAM 遊戲資料蒐集</title>
+
+        <!--  bootstrap 頁碼 樣式  -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        
+        <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        
+
+        <div id="Banner">
+            <div class="logo">
+                <a href="/"> <img src="/static/img/logo.png" ></a>
+            </div>
+            <span>STEAM 遊戲資料蒐集</span> 
+            <div class="steamlogo">
+                <a href="https://store.steampowered.com/"> <img src="/static/img/New_Steam_Logo_with_name.jpg" ></a>
+            </div>
+        </div>
+        
+        
+        
+        <div id="menu">
+            
+            <ol>
+                <li>
+                    <a href="/top_Seller_Today">今日暢銷遊戲排行榜</a>
+                </li>
+                <li>
+                    <a href="/most_Played_Today">今日遊玩人數排行榜</a>
+                </li>
+                <li>
+                    <a href="/analyze_data">遊戲相關統計表</a>
+                </li>     
+                <li>
+                    <a href="/feedback">給予建議</a>
+                </li>     
+                <li>
+                    <a href="/api">串接資料</a>
+                </li>
+                
+            </ol>
+
+        </div>
+        
+        <div id="content">
+            <!-- 顯示左半邊 -->
+            <div class="viewSide">
+            
+                <!-- 顯示 本月前5名 暢銷遊戲 -->
+                <div class="viewData">                    
+                    <h2>本月前5名 暢銷遊戲</h2>
+                    {% if top5SellGame %}
+                    <div class="rowData">
+                    
+                        <div class="rowPic">
+                            <a href="{{top5SellGame[0][5]}}" >
+                                <picture>
+                                        <source srcset="{{top5SellGame[0][4]}}" />
+                                    <img src="{{top5SellGame[0][4]}}" srcset="/static/img/store_home_share.jpg"/>
+                                </picture>
+                            </a>                    
+                        </div>
+                        
+                        <div class="rowText">
+                            <span style="width: 25%">本月排名</span>                      
+                            <span style="width: 75%">遊戲名稱</span>                                   
+
+                            {% for row in top5SellGame %}
+                                <a href="{{row[5]}}">
+                                    <span>{{row[2]}}</span>
+                                    <span style="width: 75%">{{row[1]}}</span>                            
+                                </a>
+                            {% endfor %}
+                        </div>
+                        
+                    </div>
+                    {% else %}
+                        <div class="rowText">
+                            <span>本月排名暫無資料</span> 
+                        </div>
+                        <br />
+                        <div class="rowPic">
+                            <img src="/static/img/waiting.png" width="40%"/>
+                        </div>
+                    {% endif %}
+                </div>
+                   
+                <!-- 顯示 本月前10名 暢銷遊戲 類型-->
+                <div class="viewData">
+                              
+                    <h2>本月前10名 暢銷遊戲 - 類型</h2>
+                    {% if top10SellGameType %}  
+                    <div class="rowData">
+                    
+                        <div class="rowText">
+                            <span style="width: 33%">本月排名</span>         
+                            <span style="width: 33%">出現次數</span>                  
+                            <span style="width: 34%">遊戲名稱</span>      
+                            
+                            {% for row in top10SellGameType %}
+                                
+                                <span style="width: 33%">{{row[3]}}</span>
+                                <span style="width: 33%">{{row[2]}}</span>
+                                <span style="width: 34%">{{row[1]}}</span>
+                                                  
+                            {% endfor %}  
+                        </div>
+
+                    </div> 
+                    {% else %}
+                        <div class="rowText">
+                            <span>本月排名暫無資料</span> 
+                        </div>
+                        <br />
+                        <div class="rowPic">
+                            <img src="/static/img/waiting.png" width="40%"/>
+                        </div>
+                    {% endif %} 
+                </div>
+                
+                <!-- 顯示 本月 暢銷遊戲 價格類型比例-->
+                <div class="viewData">                    
+                    <h2>本月 暢銷遊戲 價格類型比例</h2>
+                    {% if topSellPricePie %} 
+                    <div class="rowData">
+                    
+                        <div class="rowText">
+                            <span style="width: 50%; padding-left: 15%">價格類型</span>         
+                            <span style="width: 50%; padding-right: 15%">比例</span>   
+                            
+                            {% for row in topSellPricePie %}
+                            
+                                <span style="width: 50%; padding-left: 15%">
+                                    {% if row[1] == "free" %}
+                                        免費
+                                    {% elif row[1] == "sale" %} 
+                                        特價
+                                    {% elif row[1] == "price" %} 
+                                        原價                                
+                                    {% endif %}
+                                </span>
+                                <span style="width: 50%; padding-right: 15%">{{row[2]}}</span>
+                                                  
+                            {% endfor %}  
+                        </div>
+                    </div>
+                    {% else %}
+                        <div class="rowText">
+                            <span>本月排名暫無資料</span> 
+                        </div>
+                        <br />
+                        <div class="rowPic">
+                            <img src="/static/img/waiting.png" width="40%"/>
+                        </div>
+                    {% endif %}   
+                </div>                   
+                   
+            </div>
+            
+            
+            <div class="viewSide">
+            
+                <!-- 顯示 本月前5名 最多人遊玩 -->
+                <div class="viewData">
+                    
+                    <h2>本月前5名 最多人遊玩</h2>
+                    {% if top5PeopleGame %} 
+                    <div class="rowData">
+                    
+                        <div class="rowPic">
+                            <a href="{{top5PeopleGame[0][5]}}" >
+                                <picture>
+                                        <source srcset="{{top5PeopleGame[0][4]}}" />
+                                    <img src="{{top5PeopleGame[0][4]}}" srcset="/static/img/store_home_share.jpg"/>
+                                </picture>
+                            </a>                    
+                        </div>
+                        
+                        <div class="rowText">
+                            <span style="width: 25%">本月排名</span>                      
+                            <span style="width: 75%">遊戲名稱</span>                                   
+
+                            {% for row in top5PeopleGame %}
+                                <a href="{{row[5]}}">
+                                    <span>{{row[2]}}</span>
+                                    <span style="width: 75%">{{row[1]}}</span>                            
+                                </a>
+                            {% endfor %}
+                        </div>
+                        
+                    </div>
+                    {% else %}
+                        <div class="rowText">
+                            <span>本月排名暫無資料</span> 
+                        </div>
+                        <br />
+                        <div class="rowPic">
+                            <img src="/static/img/waiting.png" width="40%"/>
+                        </div>
+                    {% endif %}   
+                </div>
+                   
+                <!-- 顯示 本月前10名 暢銷遊戲 類型-->
+                <div class="viewData">                    
+                    <h2>本月前10名 最多人遊玩 - 類型</h2>
+                    {% if top10PeopleGameType %}
+                    <div class="rowData">
+                    
+                        <div class="rowText">
+                            <span style="width: 33%">本月排名</span>         
+                            <span style="width: 33%">出現次數</span>                  
+                            <span style="width: 34%">遊戲名稱</span>      
+                            
+                            {% for row in top10PeopleGameType %}
+                                
+                                <span style="width: 33%">{{row[3]}}</span>
+                                <span style="width: 33%">{{row[2]}}</span>
+                                <span style="width: 34%">{{row[1]}}</span>
+                                                  
+                            {% endfor %}  
+                        </div>
+                    </div>  
+                    {% else %}
+                        <div class="rowText">
+                            <span>本月排名暫無資料</span> 
+                        </div>
+                        <br />
+                        <div class="rowPic">
+                            <img src="/static/img/waiting.png" width="40%"/>
+                        </div>
+                    {% endif %}  
+                </div>
+                
+                <!-- 顯示 本月 暢銷遊戲 價格類型比例-->
+                <div class="viewData">                    
+                    <h2>本月 暢銷遊戲 價格類型比例</h2>
+                    {% if top10PeopleGameType %}
+                    <div class="rowData">
+                    
+                        <div class="rowText">
+                            <span style="width: 50%; padding-left: 15%">價格類型</span>         
+                            <span style="width: 50%; padding-right: 15%">比例</span>   
+                            
+                            {% for row in topSellPricePie %}
+                                <span style="width: 50%; padding-left: 15%">
+                                    {% if row[1] == "free" %}
+                                        免費
+                                    {% elif row[1] == "sale" %} 
+                                        特價
+                                    {% elif row[1] == "price" %} 
+                                        原價
+                                    {% endif %}
+                                </span>
+                                
+                                <span style="width: 50%; padding-right: 15%">{{row[2]}}</span>
+                                                  
+                            {% endfor %}  
+                        </div>
+                    </div> 
+                    {% else %}
+                        <div class="rowText">
+                            <span>本月排名暫無資料</span> 
+                        </div>
+                        <br />
+                        <div class="rowPic">
+                            <img src="/static/img/waiting.png" width="40%"/>
+                        </div>
+                    {% endif %}   
+                </div>      
+            </div> 
+        </div>
+
+        <div style="clear: both;"></div>
+
+        <div id="footer">© 2025 Valve Corporation. 版權所有。所有商標皆為各自所有權人在美國與其他國家 (地區) 之財產。</div>
+
+    </body>
+
+</html>

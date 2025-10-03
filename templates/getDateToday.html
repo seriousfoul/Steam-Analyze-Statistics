@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>STEAM 遊戲資料蒐集 - 每日排名</title>
+
+        <!--  bootstrap 頁碼 樣式  -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        
+        <link href="{{ url_for('static', filename='css/index.css') }}" rel="stylesheet">
+    </head>
+    <body>
+
+        <div id="Banner">
+            <div class="logo">
+                <a href="/"> <img src="/static/img/logo.png" ></a>
+            </div>
+            <span>STEAM 遊戲資料蒐集</span> 
+            <div class="steamlogo">
+                <a href="https://store.steampowered.com/"> <img src="/static/img/New_Steam_Logo_with_name.jpg" ></a>
+            </div>
+        </div>
+        
+        <div id="menu">
+            
+            <ol>
+                <li>
+                    <a href="/top_Seller_Today">今日暢銷遊戲排行榜</a>
+                </li>
+                <li>
+                    <a href="/most_Played_Today">今日遊玩人數排行榜</a>
+                </li>
+                <li>
+                    <a href="/analyze_data">遊戲相關統計表</a>
+                </li>     
+                <li>
+                    <a href="/feedback">給予建議</a>
+                </li>
+                <li>
+                    <a href="/api">串接資料</a>
+                </li>                     
+                
+            </ol>
+            
+        </div>
+        <div id="content">
+            {% if data %}
+                {% for row in data %}
+                    <div class="gamePic">
+                        <img src="{{row[2]}}">
+                    </div>
+                    <a href="{{row[6]}}">
+                        <div class="gameTitle">
+                            <p>今日排名：{{row[5]}}</p>
+                            <span>遊戲名稱：{{row[1]}}</span>
+                            {% if row[3] != 0 %}
+                                <span>遊戲原價：NT$ {{row[3]}}</span>
+                            {% else %}
+                                <span>遊戲原價：免費</span>
+                            {% endif %}
+                            {% if row[4] != 0 %}
+                                <span>遊戲特價：NT$ {{row[4]}}</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="stop"></div>   
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center;">
+                    <h2>資料讀取中</h2>
+                    <img src="/static/img/loading.gif">                    
+                </div>
+                
+                <script>
+                    setTimeout(
+                        function() {
+                            window.location.href = "/top_Seller_Today";
+                        }, 2000);
+                </script>
+            {% endif %}
+        </div>
+
+        <div style="clear: both;"></div>
+
+        <div style="text-align: center;">
+            {{pagination.links}}
+        </div> 
+
+        <div id="footer">© 2025 Valve Corporation. 版權所有。所有商標皆為各自所有權人在美國與其他國家 (地區) 之財產。</div>
+
+    </body>
+
+</html>
