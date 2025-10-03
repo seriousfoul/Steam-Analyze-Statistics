@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: flaskWeb
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn flaskWeb:app
+    pythonVersion: 3.11
