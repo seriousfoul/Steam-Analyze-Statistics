@@ -1,4 +1,5 @@
-import mysqlDb
+# import mysqlDb
+import sqlite3
 
 from datetime import datetime
 
@@ -10,7 +11,7 @@ import matplotlib
 def linePlot(Plot, tableName , today):
 
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="C:\Windows\Fonts\kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="C:/Windows/Fonts/msjh.ttc")
 
     plt.legend(handles = Plot)
     plt.gca().invert_yaxis()  # 反轉 Y 軸
@@ -44,7 +45,8 @@ def barPlot(dictData, tableName, today):
             toTable = "top10peoplegametype"
             sql = "select * from {} where month = '{}' and `rank` = '{}'".format(toTable, today.strftime("%Y-%m-01"), time+1)
         
-        cursor = mysqlDb.mydb.cursor()
+        mydb = sqlite3.connect("steam.db")
+        cursor = mydb.cursor()
         cursor.execute(sql)
         
         if cursor.fetchall():
@@ -54,7 +56,7 @@ def barPlot(dictData, tableName, today):
 
         
         cursor.execute(sql)
-        mysqlDb.mydb.commit()
+        mydb.commit()
         cursor.close()        
     
     plt.figure(figsize=(12,9))    
@@ -63,7 +65,7 @@ def barPlot(dictData, tableName, today):
     plt.bar(typeDf['typeName'], typeDf['typeCount'], tick_label = typeDf['typeName'], width=0.5)
     
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="C:\Windows\Fonts\kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="C:/Windows/Fonts/msjh.ttc")
     
     plt.title(pltname, fontsize= 35, color= "darkblue")
     plt.xlabel('Type', fontsize=20, color="darkblue", fontproperties=chinese_font)
@@ -79,7 +81,8 @@ def barPlot(dictData, tableName, today):
 def piePlot(tableName, today):
     sql = "select price, sale from {} where date >= {}".format(tableName, today.strftime("%Y-%m-01"))
     
-    cursor = mysqlDb.mydb.cursor()
+    mydb = sqlite3.connect("steam.db")
+    cursor = mydb.cursor()
     cursor.execute(sql)
     price = {'free':0, 'price':0, 'sale':0}
     priceData = cursor.fetchall()
@@ -103,7 +106,8 @@ def piePlot(tableName, today):
             toTable = "mostplaypricepie"
             sql = "select * from {} where month = '{}' and type = '{}'".format(toTable, today.strftime("%Y-%m-01"), priceDf['priceType'][time])
         
-        cursor = mysqlDb.mydb.cursor()
+        mydb = sqlite3.connect("steam.db")
+        cursor = mydb.cursor()
         cursor.execute(sql)
         sumNum = sum(priceDf['count'])    
         priceData = cursor.fetchone()
@@ -114,7 +118,7 @@ def piePlot(tableName, today):
             sql = "insert into {} (type, percent, month) values ('{}','{:.0%}','{}')".format(toTable, priceDf['priceType'][time], priceDf['count'][time] / sumNum, today.strftime("%Y-%m-01"))
        
         cursor.execute(sql)
-        mysqlDb.mydb.commit()
+        mydb.commit()
         cursor.close() 
    
     plt.figure(figsize=(7,5))
@@ -130,7 +134,7 @@ def piePlot(tableName, today):
                 shadow=True
                 )
     
-    chinese_font = matplotlib.font_manager.FontProperties(fname="C:\Windows\Fonts\kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="C:/Windows/Fonts/msjh.ttc")
     
     pltname = "{} ".format(today.strftime("%Y-%m -")) + tableName.upper() + "(Price) - pie"
     plt.title(pltname, fontsize= 20, color= "darkblue", x=0.5, y=1, fontproperties=chinese_font)
@@ -149,7 +153,8 @@ def markPlot(dbTable):
     # 搜尋當月上榜最多的前5筆資料
     sql = 'select *,count(name) as time from `{}` where date >= "{}" Group by name Order by time DESC limit 5'.format(dbTable, now.strftime("%Y-%m-01"))
     
-    cursor = mysqlDb.mydb.cursor()
+    mydb = sqlite3.connect("steam.db")
+    cursor = mydb.cursor()
     cursor.execute(sql)
     info = cursor.fetchall()
     
@@ -169,7 +174,7 @@ def markPlot(dbTable):
             gameInfo = {}
             gameInfo['rank'] = col[0]        
             gameInfo['sale'] = col[1]
-            gameInfo['date'] = col[2].strftime("%d") 
+            gameInfo['date'] = datetime.strptime(col[2], "%Y-%m-%d").strftime("%d") 
             gameInfoList.append(gameInfo)
             
         
@@ -211,7 +216,8 @@ def markPlot(dbTable):
             toTable = "top5peoplegame"
             sql = "select id from {} where month = '{}' and `rank` = '{}'".format(toTable, now.strftime("%Y-%m-01"), time+1)
         
-        cursor = mysqlDb.mydb.cursor()
+        mydb = sqlite3.connect("steam.db")
+        cursor = mydb.cursor()
         cursor.execute(sql)    
 
         if cursor.fetchall():
@@ -221,7 +227,7 @@ def markPlot(dbTable):
         
         
         cursor.execute(sql)
-        mysqlDb.mydb.commit()
+        mydb.commit()
         cursor.close()
     
     linePlot(plotList, dbTable, now)

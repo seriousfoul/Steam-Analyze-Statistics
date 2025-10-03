@@ -1,4 +1,6 @@
-import mysqlDb
+# import mysqlDb
+import sqlite3
+
 from datetime import datetime
 from wordcloud import WordCloud
 
@@ -8,7 +10,8 @@ def markCloud(dbtable):
     
     sql = "select type from {} where date >= {}".format(dbtable, month)
     
-    cursor = mysqlDb.mydb.cursor()
+    mydb = sqlite3.connect("steam.db")
+    cursor = mydb.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()
 

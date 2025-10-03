@@ -66,16 +66,18 @@
                 {% endfor %}
             {% else %}
                 <div style="text-align: center;">
-                    <h2>資料讀取中</h2>
-                    <img src="/static/img/loading.gif">                    
+                    <h2>資料等待更新</h2>
+                    <img src="/static/img/loading.gif">
+                    <img src="/static/img/waiting.png">                    
                 </div>
-                
+                <!--
                 <script>
                     setTimeout(
                         function() {
                             window.location.href = "/top_Seller_Today";
                         }, 2000);
                 </script>
+                -->
             {% endif %}
         </div>
 

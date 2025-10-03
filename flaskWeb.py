@@ -1,4 +1,5 @@
-import mysqlDb
+# import mysqlDb
+import sqlite3
 
 from flask import Flask, render_template,request
 from flask_paginate import Pagination, get_page_parameter
@@ -13,13 +14,15 @@ app = Flask(__name__)
 
 # SQL搜尋資料
 def getData(tableName, funcWork): #tableName為資料表名稱，funWork為執行BeautifulSoup的python檔案
-    funcWork(tableName)
+    # funcWork(tableName)
     
     # 執行今日資料總筆數
     page = request.args.get('page')
     sql = "select count(id) as GameCount from {} where date = '{}'".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-%d"))
 
-    cursor = mysqlDb.mydb.cursor()
+    
+    mydb = sqlite3.connect("steam.db")
+    cursor = mydb.cursor()
     cursor.execute(sql)
     gameCount = int(cursor.fetchone()[0])
     
@@ -30,7 +33,7 @@ def getData(tableName, funcWork): #tableName為資料表名稱，funWork為執�
         sql = "select * from {} where date = '{}' \
             limit 10".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-%d"))
         
-        cursor = mysqlDb.mydb.cursor()
+        cursor = mydb.cursor()
         cursor.execute(sql)
         data = cursor.fetchall()
         
@@ -53,7 +56,7 @@ def getData(tableName, funcWork): #tableName為資料表名稱，funWork為執�
         sql = "select * from {} where date = '{}' \
             limit {},10".format(tableName, datetime.strftime(datetime.today(),"%Y-%m-%d"), startp*10)
 
-        cursor = mysqlDb.mydb.cursor()
+        cursor = mydb.cursor()
         cursor.execute(sql)
         data = cursor.fetchall()
 
@@ -68,7 +71,8 @@ def viewType(tableName):
 
     sql = "select * from {} where month = '{}'".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-01"))
     
-    cursor = mysqlDb.mydb.cursor()
+    mydb = sqlite3.connect("steam.db")
+    cursor = mydb.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()
      
@@ -80,9 +84,10 @@ def viewTopGame(tableName):
 
     # 搜尋 tableName 的全部 並把 tableName 沒有的資料，
     # name、image(第一名)、link 從大表 由name聚合 加入 tableName
-    sql = "SELECT g.*, s.image, s.link FROM {} as g LEFT JOIN ( select name, min(image) as image, link from steam.topsellers GROUP BY name) as s on g.name = s.name  where month = '{}' ".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-01"))
+    sql = "SELECT g.*, s.image, s.link FROM {} as g LEFT JOIN ( select name, min(image) as image, link from topsellers GROUP BY name) as s on g.name = s.name  where month = '{}' ".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-01"))
     
-    cursor = mysqlDb.mydb.cursor()
+    mydb = sqlite3.connect("steam.db")
+    cursor = mydb.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()         
      
@@ -137,9 +142,10 @@ def feedback():
         contant = request.form.get('contant')
 
         sql = "insert into feedback (name,email,title,contant) values ('{}','{}','{}','{}')".format(name, email, title, contant)
-        cursor = mysqlDb.mydb.cursor()
+        mydb = sqlite3.connect("steam.db")
+        cursor = mydb.cursor()
         cursor.execute(sql)
-        mysqlDb.mydb.commit()
+        mydb.commit()
         cursor.close()
 
         success = True
@@ -182,7 +188,8 @@ def api2(gt, sm):
         if sm == "topSeller":
             
             sql = "SELECT * FROM `top5sellgame`"
-            cursor = mysqlDb.mydb.cursor();
+            mydb = sqlite3.connect("steam.db")
+            cursor = mydb.cursor()
             cursor.execute(sql)      
             data = cursor.fetchall()
             
@@ -202,7 +209,8 @@ def api2(gt, sm):
         elif sm == "mostPlayer":
             
             sql = "SELECT * FROM `top5peoplegame`"
-            cursor = mysqlDb.mydb.cursor();
+            mydb = sqlite3.connect("steam.db")
+            cursor = mydb.cursor();
             cursor.execute(sql)      
             data = cursor.fetchall()
             
@@ -222,7 +230,8 @@ def api2(gt, sm):
     elif gt == "type":
         if sm == "topSeller":
             sql = "SELECT * FROM `top10sellgametype`"
-            cursor = mysqlDb.mydb.cursor();
+            mydb = sqlite3.connect("steam.db")
+            cursor = mydb.cursor();
             cursor.execute(sql)      
             data = cursor.fetchall()
             
@@ -242,7 +251,8 @@ def api2(gt, sm):
         
         elif sm == "mostPlayer":
             sql = "SELECT * FROM `top10sellgametype` "
-            cursor = mysqlDb.mydb.cursor();
+            mydb = sqlite3.connect("steam.db")
+            cursor = mydb.cursor();
             cursor.execute(sql)      
             data = cursor.fetchall()
             
@@ -263,7 +273,8 @@ def api2(gt, sm):
     elif gt == "price":
         if sm == "topSeller":
             sql = "SELECT * FROM `topsellpricepie` "
-            cursor = mysqlDb.mydb.cursor();
+            mydb = sqlite3.connect("steam.db")
+            cursor = mydb.cursor();
             cursor.execute(sql)      
             data = cursor.fetchall()
             
@@ -282,7 +293,8 @@ def api2(gt, sm):
         
         elif sm == "mostPlayer":
             sql = "SELECT * FROM `topsellpricepie` "
-            cursor = mysqlDb.mydb.cursor();
+            mydb = sqlite3.connect("steam.db")
+            cursor = mydb.cursor();
             cursor.execute(sql)      
             data = cursor.fetchall()
             
