@@ -15,6 +15,7 @@ Flask==3.1.1
 flask-paginate==2024.4.12
 Flask-RESTful==0.3.10
 fonttools==4.59.0
+gunicorn==23.0.0
 h11==0.16.0
 idna==3.10
 itsdangerous==2.2.0
