@@ -1,13 +1,14 @@
 # import mysqlDb
 import sqlite3
 
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request, Response
 from flask_paginate import Pagination, get_page_parameter
 
 from datetime import datetime
 
 # 載入執行BeautifulSoup的python檔案
 from findGameData import topGameToday
+import json
 
 app = Flask(__name__)
 
@@ -187,7 +188,7 @@ def api2(gt, sm):
     if gt == "game":
         if sm == "topSeller":
             
-            sql = "SELECT * FROM `top5sellgame`"
+            sql = "SELECT * FROM `top5sellgame` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor()
             cursor.execute(sql)      
@@ -199,16 +200,22 @@ def api2(gt, sm):
                     gameData = {}
                     gameData['name'] = row[1]
                     gameData['rank'] = row[2]
-                    gameData['month'] = row[3].strftime("%Y-%m")
+                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
                     gameList.append(gameData)
 
-                return {"Top5 Seller Game":{"status":"Success","product":gameList}}, 200
+                data = {"Top5 Seller Game":{"status":"Success","product":gameList}}, 200
+                json_str = json.dumps(data, ensure_ascii=False)
+                
+                mydb.close()
+                return Response(json_str, content_type='application/json; charset=utf-8')
+
             else:
+                mydb.close()
                 return {"Top5 Seller Game":{"status":"Failure","message":"Nothing Here"}}, 403
             
         elif sm == "mostPlayer":
             
-            sql = "SELECT * FROM `top5peoplegame`"
+            sql = "SELECT * FROM `top5peoplegame` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor();
             cursor.execute(sql)      
@@ -220,16 +227,21 @@ def api2(gt, sm):
                     gameData = {}
                     gameData['name'] = row[1]
                     gameData['rank'] = row[2]
-                    gameData['month'] = row[3].strftime("%Y-%m")
+                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
                     gameList.append(gameData)        
 
-                return {"Top5 Most Player ":{"status":"Success","product":gameList}}, 200
+                data = {"Top5 Most Player ":{"status":"Success","product":gameList}}, 200
+                json_str = json.dumps(data, ensure_ascii=False)
+
+                mydb.close()
+                return Response(json_str, content_type='application/json; charset=utf-8')
             else:
+                mydb.close()
                 return {"Top5 Most Player":{"status":"Failure","message":"Nothing Here"}}, 403
         
     elif gt == "type":
         if sm == "topSeller":
-            sql = "SELECT * FROM `top10sellgametype`"
+            sql = "SELECT * FROM `top10sellgametype` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor();
             cursor.execute(sql)      
@@ -242,15 +254,20 @@ def api2(gt, sm):
                     gameData['type'] = row[1]
                     gameData['count'] = row[2]
                     gameData['rank'] = row[3]
-                    gameData['month'] = row[4].strftime("%Y-%m")
+                    gameData['month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
                     gameList.append(gameData)        
 
-                return {"Top10 Seller Game - Type":{"status":"Success","product":gameList}}, 200
+                data = {"Top10 Seller Game - Type":{"status":"Success","product":gameList}}, 200
+                json_str = json.dumps(data, ensure_ascii=False)
+
+                mydb.close()
+                return Response(json_str, content_type='application/json; charset=utf-8')
             else:
+                mydb.close()
                 return {"Top10 Seller Game - Type":{"status":"Failure","message":"Nothing Here"}}, 403
         
         elif sm == "mostPlayer":
-            sql = "SELECT * FROM `top10sellgametype` "
+            sql = "SELECT * FROM `top10sellgametype` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor();
             cursor.execute(sql)      
@@ -263,16 +280,20 @@ def api2(gt, sm):
                     gameData['type'] = row[1]
                     gameData['count'] = row[2]
                     gameData['rank'] = row[3]
-                    gameData['month'] = row[4].strftime("%Y-%m")
+                    gameData['month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
                     gameList.append(gameData)        
+                data =  {"Top10 Most Player - Type":{"status":"Success","product":gameList}}, 200
+                json_str = json.dumps(data, ensure_ascii=False)
 
-                return {"Top10 Most Player - Type":{"status":"Success","product":gameList}}, 200
+                mydb.close()
+                return Response(json_str, content_type='application/json; charset=utf-8')
             else:
+                mydb.close()
                 return {"Top10 Most Player - Type":{"status":"Failure","message":"Nothing Here"}}, 403      
     
     elif gt == "price":
         if sm == "topSeller":
-            sql = "SELECT * FROM `topsellpricepie` "
+            sql = "SELECT * FROM `topsellpricepie` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor();
             cursor.execute(sql)      
@@ -284,15 +305,20 @@ def api2(gt, sm):
                     gameData = {}
                     gameData['type'] = row[1]
                     gameData['percent'] = row[2]
-                    gameData['month'] = row[3].strftime("%Y-%m")
+                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
                     gameList.append(gameData)        
 
-                return {"Percentage of Top Seller Price Type":{"status":"Success","product":gameList}}, 200
+                data = {"Percentage of Top Seller Price Type":{"status":"Success","product":gameList}}, 200
+                json_str = json.dumps(data, ensure_ascii=False)
+
+                mydb.close()
+                return Response(json_str, content_type='application/json; charset=utf-8')
             else:
+                mydb.close()
                 return {"Percentage of Top Seller Price Type":{"status":"Failure","message":"Nothing Here"}}, 403
         
         elif sm == "mostPlayer":
-            sql = "SELECT * FROM `topsellpricepie` "
+            sql = "SELECT * FROM `topsellpricepie` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor();
             cursor.execute(sql)      
@@ -304,11 +330,16 @@ def api2(gt, sm):
                     gameData = {}
                     gameData['type'] = row[1]
                     gameData['percent'] = row[2]
-                    gameData['month'] = row[3].strftime("%Y-%m")
-                    gameList.append(gameData)        
+                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                    gameList.append(gameData)
 
-                return {"Percentage of Most Player Price Type":{"status":"Success","product":gameList}}, 200
+                data = {"Percentage of Most Player Price Type":{"status":"Success","product":gameList}}
+                json_str = json.dumps(data, ensure_ascii=False)
+
+                mydb.close()
+                return Response(json_str, content_type='application/json; charset=utf-8')
             else:
+                mydb.close()
                 return {"Percentage of Most Player Price Type":{"status":"Failure","message":"Nothing Here"}}, 403      
 
 
