@@ -66,9 +66,12 @@
                 {% endfor %}
             {% else %}
                 <div style="text-align: center;">
-                    <h2>資料等待更新</h2>
-                    <img src="/static/img/loading.gif">
-                    <img src="/static/img/waiting.png">                    
+                    <h2>等待資料更新</h2>
+                    <div class="waiting">
+                        <img src="/static/img/loading.gif">
+                        <br />
+                        <img src="/static/img/waiting.png">
+                    </div>                   
                 </div>
                 <!--
                 <script>

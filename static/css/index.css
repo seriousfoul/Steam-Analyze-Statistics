@@ -187,5 +187,10 @@ body{
     font-size: 22px;
 }
 
+.waiting img{
+    width: 30%;
+    padding-left: 5%;
+    padding-right: 5% 
+}
 
 
