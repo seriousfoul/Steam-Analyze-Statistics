@@ -1,7 +1,7 @@
 # import mysqlDb
 import sqlite3
 
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, make_response
 from flask_paginate import Pagination, get_page_parameter
 
 from datetime import datetime
@@ -195,19 +195,34 @@ def api2(gt, sm):
             data = cursor.fetchall()
             
             gameList = []
+            temp = ""
+            count = 0
+            gameData = {}
+            RankInfo = []
             if data:
                 for row in data:
-                    gameData = {}
-                    gameData['name'] = row[1]
-                    gameData['rank'] = row[2]
-                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    gameList.append(gameData)
+                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
+                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                    
+                    gameInfo = {}
+                    gameInfo['Name'] = row[1]
+                    gameInfo['Rank'] = row[2]
+                    RankInfo.append(gameInfo)
+                    count += 1
+                    
+                    if count == 5:
+                        gameData['RankInfo'] = RankInfo
+                        RankInfo = []
+                        gameList.append(gameData)
+                        gameData = {}
+                        count = 0
 
                 data = {"Top5 Seller Game":{"status":"Success","product":gameList}}, 200
-                json_str = json.dumps(data, ensure_ascii=False)
-                
+                response = make_response(json.dumps(data, ensure_ascii=False), 200)
+                response.headers['Content-Type'] = 'application/json; charset=utf-8'
                 mydb.close()
-                return Response(json_str, content_type='application/json; charset=utf-8')
+                return response
 
             else:
                 mydb.close()
@@ -222,19 +237,34 @@ def api2(gt, sm):
             data = cursor.fetchall()
             
             gameList = []
+            temp = ""
+            count = 0
+            gameData = {}
+            RankInfo = []
             if data:
                 for row in data:
-                    gameData = {}
-                    gameData['name'] = row[1]
-                    gameData['rank'] = row[2]
-                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    gameList.append(gameData)        
+                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
+                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                    
+                    gameInfo = {}
+                    gameInfo['Name'] = row[1]
+                    gameInfo['Rank'] = row[2]
+                    RankInfo.append(gameInfo)
+                    count += 1
+                    
+                    if count == 5:
+                        gameData['RankInfo'] = RankInfo
+                        RankInfo = []
+                        gameList.append(gameData)
+                        gameData = {}
+                        count = 0  
 
                 data = {"Top5 Most Player ":{"status":"Success","product":gameList}}, 200
-                json_str = json.dumps(data, ensure_ascii=False)
-
+                response = make_response(json.dumps(data, ensure_ascii=False), 200)
+                response.headers['Content-Type'] = 'application/json; charset=utf-8'
                 mydb.close()
-                return Response(json_str, content_type='application/json; charset=utf-8')
+                return response
             else:
                 mydb.close()
                 return {"Top5 Most Player":{"status":"Failure","message":"Nothing Here"}}, 403
@@ -248,20 +278,36 @@ def api2(gt, sm):
             data = cursor.fetchall()
             
             gameList = []
+            temp = ""
+            count = 0
+            gameData = {}
+            RankInfo = []
             if data:
                 for row in data:
-                    gameData = {}
-                    gameData['type'] = row[1]
-                    gameData['count'] = row[2]
-                    gameData['rank'] = row[3]
-                    gameData['month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
-                    gameList.append(gameData)        
+                    if temp != datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m"):
+                        temp == datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
+                        gameData['Month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
+                    
+                    gameInfo = {}
+                    gameInfo['type'] = row[1]
+                    gameInfo['count'] = row[2]
+                    gameInfo['rank'] = row[3]
+                    RankInfo.append(gameInfo)
+                    count += 1
+                    
+                    if count == 10:
+                        gameData['RankInfo'] = RankInfo
+                        RankInfo = []
+                        gameList.append(gameData)
+                        gameData = {}
+                        count = 0
+            
 
                 data = {"Top10 Seller Game - Type":{"status":"Success","product":gameList}}, 200
-                json_str = json.dumps(data, ensure_ascii=False)
-
+                response = make_response(json.dumps(data, ensure_ascii=False), 200)
+                response.headers['Content-Type'] = 'application/json; charset=utf-8'
                 mydb.close()
-                return Response(json_str, content_type='application/json; charset=utf-8')
+                return response
             else:
                 mydb.close()
                 return {"Top10 Seller Game - Type":{"status":"Failure","message":"Nothing Here"}}, 403
@@ -274,19 +320,35 @@ def api2(gt, sm):
             data = cursor.fetchall()
             
             gameList = []
+            temp = ""
+            count = 0
+            gameData = {}
+            RankInfo = []
             if data:
                 for row in data:
-                    gameData = {}
-                    gameData['type'] = row[1]
-                    gameData['count'] = row[2]
-                    gameData['rank'] = row[3]
-                    gameData['month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
-                    gameList.append(gameData)        
+                    if temp != datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m"):
+                        temp == datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
+                        gameData['Month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
+                    
+                    gameInfo = {}
+                    gameInfo['type'] = row[1]
+                    gameInfo['count'] = row[2]
+                    gameInfo['rank'] = row[3]
+                    RankInfo.append(gameInfo)
+                    count += 1
+                    
+                    if count == 10:
+                        gameData['RankInfo'] = RankInfo
+                        RankInfo = []
+                        gameList.append(gameData)
+                        gameData = {}
+                        count = 0
+                       
                 data =  {"Top10 Most Player - Type":{"status":"Success","product":gameList}}, 200
-                json_str = json.dumps(data, ensure_ascii=False)
-
+                response = make_response(json.dumps(data, ensure_ascii=False), 200)
+                response.headers['Content-Type'] = 'application/json; charset=utf-8'
                 mydb.close()
-                return Response(json_str, content_type='application/json; charset=utf-8')
+                return response
             else:
                 mydb.close()
                 return {"Top10 Most Player - Type":{"status":"Failure","message":"Nothing Here"}}, 403      
@@ -300,19 +362,35 @@ def api2(gt, sm):
             data = cursor.fetchall()
             
             gameList = []
+            temp = ""
+            count = 0
+            gameData = {}
+            RankInfo = []
             if data:
                 for row in data:
-                    gameData = {}
-                    gameData['type'] = row[1]
-                    gameData['percent'] = row[2]
-                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    gameList.append(gameData)        
+                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
+                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                    
+                    gameInfo = {}
+                    gameInfo['type'] = row[1]
+                    gameInfo['percent'] = row[2]
+                    RankInfo.append(gameInfo)
+                    count += 1
+                    
+                    if count == 3:
+                        gameData['RankInfo'] = RankInfo
+                        RankInfo = []
+                        gameList.append(gameData)
+                        gameData = {}
+                        count = 0
+            
 
                 data = {"Percentage of Top Seller Price Type":{"status":"Success","product":gameList}}, 200
-                json_str = json.dumps(data, ensure_ascii=False)
-
+                response = make_response(json.dumps(data, ensure_ascii=False), 200)
+                response.headers['Content-Type'] = 'application/json; charset=utf-8'
                 mydb.close()
-                return Response(json_str, content_type='application/json; charset=utf-8')
+                return response
             else:
                 mydb.close()
                 return {"Percentage of Top Seller Price Type":{"status":"Failure","message":"Nothing Here"}}, 403
@@ -325,19 +403,35 @@ def api2(gt, sm):
             data = cursor.fetchall()
             
             gameList = []
+            temp = ""
+            count = 0
+            gameData = {}
+            RankInfo = []
             if data:
                 for row in data:
-                    gameData = {}
-                    gameData['type'] = row[1]
-                    gameData['percent'] = row[2]
-                    gameData['month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    gameList.append(gameData)
+                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
+                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                    
+                    gameInfo = {}
+                    gameInfo['type'] = row[1]
+                    gameInfo['percent'] = row[2]
+                    RankInfo.append(gameInfo)
+                    count += 1
+                    
+                    if count == 3:
+                        gameData['RankInfo'] = RankInfo
+                        RankInfo = []
+                        gameList.append(gameData)
+                        gameData = {}
+                        count = 0
+            
 
                 data = {"Percentage of Most Player Price Type":{"status":"Success","product":gameList}}
-                json_str = json.dumps(data, ensure_ascii=False)
-
+                response = make_response(json.dumps(data, ensure_ascii=False), 200)
+                response.headers['Content-Type'] = 'application/json; charset=utf-8'
                 mydb.close()
-                return Response(json_str, content_type='application/json; charset=utf-8')
+                return response
             else:
                 mydb.close()
                 return {"Percentage of Most Player Price Type":{"status":"Failure","message":"Nothing Here"}}, 403      
