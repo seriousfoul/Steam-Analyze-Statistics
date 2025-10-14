@@ -313,7 +313,7 @@ def api2(gt, sm):
                 return {"Top10 Seller Game - Type":{"status":"Failure","message":"Nothing Here"}}, 403
         
         elif sm == "mostPlayer":
-            sql = "SELECT * FROM `top10sellgametype` order by month desc"
+            sql = "SELECT * FROM `top10peoplegametype` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor();
             cursor.execute(sql)      
@@ -396,7 +396,7 @@ def api2(gt, sm):
                 return {"Percentage of Top Seller Price Type":{"status":"Failure","message":"Nothing Here"}}, 403
         
         elif sm == "mostPlayer":
-            sql = "SELECT * FROM `topsellpricepie` order by month desc"
+            sql = "SELECT * FROM `mostplaypricepie` order by month desc"
             mydb = sqlite3.connect("steam.db")
             cursor = mydb.cursor();
             cursor.execute(sql)      
