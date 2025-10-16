@@ -32,8 +32,7 @@ def topGameToday(dbTable):
     try:
         if len(data) != 0:
             print("有資料")
-        else:
-            
+        else:            
             print("沒資料")  
             
             cursor = mydb.cursor()   
@@ -87,6 +86,8 @@ def topGameToday(dbTable):
                 name = row.find("span", class_="title").text                # 遊戲名稱
                 name = name.replace("'","")                                 # 去掉90`s之類的名稱
                 prices = row.find("div", class_="discount_prices").text     # 遊戲原價
+                if prices is None:
+                    continue
                 sale = 0
  
                 
