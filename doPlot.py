@@ -11,12 +11,12 @@ import matplotlib
 def linePlot(Plot, tableName , today):
 
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="C:/Windows/Fonts/msjh.ttc")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
 
-    plt.legend(handles = Plot)
+    plt.legend(handles = Plot, prop = chinese_font)
     plt.gca().invert_yaxis()  # 反轉 Y 軸
     pltname = "{} ".format(today.strftime("%Y-%m -")) + tableName.upper() + " - line"
-    plt.title(pltname, fontsize= 20, color= "darkblue")
+    plt.title(pltname, fontsize= 20, color= "darkblue", fontproperties=chinese_font)
     plt.xlabel('Date', fontsize=15, color="darkblue", fontproperties=chinese_font)
     plt.ylabel('Rank', fontsize=15, color="darkblue", fontproperties=chinese_font)
     
@@ -65,9 +65,9 @@ def barPlot(dictData, tableName, today):
     plt.bar(typeDf['typeName'], typeDf['typeCount'], tick_label = typeDf['typeName'], width=0.5)
     
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="C:/Windows/Fonts/msjh.ttc")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
     
-    plt.title(pltname, fontsize= 35, color= "darkblue")
+    plt.title(pltname, fontsize= 35, color= "darkblue", fontproperties=chinese_font)
     plt.xlabel('Type', fontsize=20, color="darkblue", fontproperties=chinese_font)
     plt.ylabel('Count', fontsize=20, color="darkblue", fontproperties=chinese_font)
     plt.xticks(rotation=20)
@@ -119,33 +119,33 @@ def piePlot(tableName, today):
        
         cursor.execute(sql)
         mydb.commit()
-        cursor.close() 
+        cursor.close()
    
     plt.figure(figsize=(7,5))
-    plt.pie(priceDf['count'], 
-                radius = 0.9,
-                center = (-20,-5),
-                labels= priceDf['priceType'], 
-                labeldistance = 1.1, 
-                pctdistance = 0.7,
-                autopct='%.1f%%', 
-                textprops = {"fontsize" : 20},
+    plt.pie(priceDf['count'],
+                radius = 0.8,
+                center = (-5,-5),
+                labels= priceDf['priceType'],
+                labeldistance = 1.3,
+                pctdistance = 0.5,
+                autopct='%.1f%%',
+                textprops = {"fontsize" : 15},
                 wedgeprops = {'linewidth':2,'edgecolor':'w'},
                 shadow=True
                 )
     
-    chinese_font = matplotlib.font_manager.FontProperties(fname="C:/Windows/Fonts/msjh.ttc")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
     
     pltname = "{} ".format(today.strftime("%Y-%m -")) + tableName.upper() + "(Price) - pie"
-    plt.title(pltname, fontsize= 20, color= "darkblue", x=0.5, y=1, fontproperties=chinese_font)
+    plt.title(pltname, fontsize= 12, color= "darkblue", x=0.5, y=1, fontproperties=chinese_font)
     
-    plt.legend(loc = 'upper right')
+    plt.legend(loc = 'upper right', prop = chinese_font)
     plt.savefig(f'static/img/{pltname}.png')
     plt.clf()
-    plt.close()    
+    plt.close()
 
 
-def markPlot(dbTable):   
+def markPlot(dbTable):
     
     # 擷取資料 - 時間為該月份
     now = datetime.today()
@@ -161,7 +161,7 @@ def markPlot(dbTable):
     # 取得前5名的細項資料，並Json格式整理
     gameList = []
     for row in info:
-        gameNameData = {}        
+        gameNameData = {}
         gameNameData["name"] = row[1]
         gameNameData["type"] = row[7]
         gameNameData['price'] = row[2]
@@ -172,9 +172,9 @@ def markPlot(dbTable):
         gameInfoList = []
         for col in rowInfo:
             gameInfo = {}
-            gameInfo['rank'] = col[0]        
+            gameInfo['rank'] = col[0]
             gameInfo['sale'] = col[1]
-            gameInfo['date'] = datetime.strptime(col[2], "%Y-%m-%d").strftime("%d") 
+            gameInfo['date'] = datetime.strptime(col[2], "%Y-%m-%d").strftime("%d")
             gameInfoList.append(gameInfo)
             
         
@@ -183,12 +183,12 @@ def markPlot(dbTable):
         gameList.append(gameNameData)
     
     # 資料由 Json 轉成 pandas
-    gameListDf = pd.DataFrame(gameList)  
+    gameListDf = pd.DataFrame(gameList)
     
     
     # 開始繪製圖形
-    # 折線圖 - 時間與排名的關係      
-    lineColor = ["red","skyblue","orange","purple","green"]    
+    # 折線圖 - 時間與排名的關係
+    lineColor = ["red","skyblue","orange","purple","green"]
     plotList = []
     rankCount = []
     
@@ -196,7 +196,7 @@ def markPlot(dbTable):
         gameDf = pd.DataFrame(gameListDf['gameInfo'][time], columns=['rank','date'])
         gameDf.set_index('date', inplace=True)
         
-        tempPlot = plt.plot(gameDf, '-o', label = gameListDf['name'][time], color=lineColor[time])    
+        tempPlot = plt.plot(gameDf, '-o', label = gameListDf['name'][time], color=lineColor[time])
         plotList.append(tempPlot[0])
         
         rankCount.append(gameDf['rank'].sum())
@@ -208,7 +208,7 @@ def markPlot(dbTable):
 
 
     # 將統計好的資料 存到 專屬的統計資料表中
-    for time in range(len(gameList)):        
+    for time in range(len(gameList)):
         if dbTable == 'topsellers':
             toTable = "top5sellgame"
             sql = "select id from {} where month = '{}' and `rank` = '{}'".format(toTable, now.strftime("%Y-%m-01"), time+1)
@@ -218,13 +218,12 @@ def markPlot(dbTable):
         
         mydb = sqlite3.connect("steam.db")
         cursor = mydb.cursor()
-        cursor.execute(sql)    
+        cursor.execute(sql)
 
         if cursor.fetchall():
             sql = "update {} set name = '{}' where month = '{}' and `rank` = '{}'".format(toTable, rankSort['name'][time],  now.strftime("%Y-%m-01"), time+1)
         else:
             sql = "insert into {} (name, `rank`, month) values ('{}','{}','{}')".format(toTable, rankSort['name'][time], time+1, now.strftime("%Y-%m-01"))
-        
         
         cursor.execute(sql)
         mydb.commit()
@@ -241,7 +240,7 @@ def markPlot(dbTable):
             if typeName in typeGroup:
                 typeGroup[typeName] += 1
             else:
-                typeGroup[typeName] = 1                 
+                typeGroup[typeName] = 1
 
     barPlot(typeGroup, dbTable, now)
 

@@ -38,7 +38,7 @@ def topGameToday(dbTable):
             
             cursor = mydb.cursor()   
             
-            url = f"https://store.steampowered.com/search/?filter={dbTable}" 
+            url = f"https://store.steampowered.com/search/?filter=global{dbTable}" 
             
             # 使用 requests 抓HTML
             header = {

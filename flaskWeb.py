@@ -186,256 +186,150 @@ def api():
 def api2(gt, sm):
         
     if gt == "game":
-        if sm == "topSeller":
-            
+        if sm == "topSeller":            
             sql = "SELECT * FROM `top5sellgame` order by month desc"
-            mydb = sqlite3.connect("steam.db")
-            cursor = mydb.cursor()
-            cursor.execute(sql)      
-            data = cursor.fetchall()
-            
-            gameList = []
-            temp = ""
-            count = 0
-            gameData = {}
-            RankInfo = []
-            if data:
-                for row in data:
-                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
-                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    
-                    gameInfo = {}
-                    gameInfo['Name'] = row[1]
-                    gameInfo['Rank'] = row[2]
-                    RankInfo.append(gameInfo)
-                    count += 1
-                    
-                    if count == 5:
-                        gameData['RankInfo'] = RankInfo
-                        RankInfo = []
-                        gameList.append(gameData)
-                        gameData = {}
-                        count = 0
-
-                data = {"Top5 Seller Game":{"status":"Success","product":gameList}}, 200
-                response = make_response(json.dumps(data, ensure_ascii=False), 200)
-                response.headers['Content-Type'] = 'application/json; charset=utf-8'
-                mydb.close()
-                return response
-
-            else:
-                mydb.close()
-                return {"Top5 Seller Game":{"status":"Failure","message":"Nothing Here"}}, 403
-            
-        elif sm == "mostPlayer":
-            
+        elif sm == "mostPlayer":            
             sql = "SELECT * FROM `top5peoplegame` order by month desc"
-            mydb = sqlite3.connect("steam.db")
-            cursor = mydb.cursor();
-            cursor.execute(sql)      
-            data = cursor.fetchall()
+        else:
+            return {"status":"Failure","message":"Nothing Here"}
             
-            gameList = []
-            temp = ""
-            count = 0
-            gameData = {}
-            RankInfo = []
-            if data:
-                for row in data:
-                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
-                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    
-                    gameInfo = {}
-                    gameInfo['Name'] = row[1]
-                    gameInfo['Rank'] = row[2]
-                    RankInfo.append(gameInfo)
-                    count += 1
-                    
-                    if count == 5:
-                        gameData['RankInfo'] = RankInfo
-                        RankInfo = []
-                        gameList.append(gameData)
-                        gameData = {}
-                        count = 0  
+        mydb = sqlite3.connect("steam.db")
+        cursor = mydb.cursor()
+        cursor.execute(sql)      
+        data = cursor.fetchall()
+        
+        gameList = []
+        temp = ""
+        count = 0
+        gameData = {}
+        RankInfo = []
+        if data:
+            for row in data:
+                if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
+                    temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                    gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                
+                gameInfo = {}
+                gameInfo['Name'] = row[1]
+                gameInfo['Rank'] = row[2]
+                RankInfo.append(gameInfo)
+                count += 1
+                
+                if count == 5:
+                    gameData['RankInfo'] = RankInfo
+                    RankInfo = []
+                    gameList.append(gameData)
+                    gameData = {}
+                    count = 0
 
-                data = {"Top5 Most Player ":{"status":"Success","product":gameList}}, 200
-                response = make_response(json.dumps(data, ensure_ascii=False), 200)
-                response.headers['Content-Type'] = 'application/json; charset=utf-8'
-                mydb.close()
-                return response
-            else:
-                mydb.close()
-                return {"Top5 Most Player":{"status":"Failure","message":"Nothing Here"}}, 403
+            data = {"status":"Success","product":gameList}
+            response = make_response(json.dumps(data, ensure_ascii=False), 200)
+            response.headers['Content-Type'] = 'application/json; charset=utf-8'
+            mydb.close()
+            return response
+
+        else:
+            mydb.close()
+            return {"status":"Failure","message":"Nothing Here"}
         
     elif gt == "type":
         if sm == "topSeller":
             sql = "SELECT * FROM `top10sellgametype` order by month desc"
-            mydb = sqlite3.connect("steam.db")
-            cursor = mydb.cursor();
-            cursor.execute(sql)      
-            data = cursor.fetchall()
-            
-            gameList = []
-            temp = ""
-            count = 0
-            gameData = {}
-            RankInfo = []
-            if data:
-                for row in data:
-                    if temp != datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m"):
-                        temp == datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
-                        gameData['Month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
-                    
-                    gameInfo = {}
-                    gameInfo['type'] = row[1]
-                    gameInfo['count'] = row[2]
-                    gameInfo['rank'] = row[3]
-                    RankInfo.append(gameInfo)
-                    count += 1
-                    
-                    if count == 10:
-                        gameData['RankInfo'] = RankInfo
-                        RankInfo = []
-                        gameList.append(gameData)
-                        gameData = {}
-                        count = 0
-            
-
-                data = {"Top10 Seller Game - Type":{"status":"Success","product":gameList}}, 200
-                response = make_response(json.dumps(data, ensure_ascii=False), 200)
-                response.headers['Content-Type'] = 'application/json; charset=utf-8'
-                mydb.close()
-                return response
-            else:
-                mydb.close()
-                return {"Top10 Seller Game - Type":{"status":"Failure","message":"Nothing Here"}}, 403
-        
         elif sm == "mostPlayer":
             sql = "SELECT * FROM `top10peoplegametype` order by month desc"
-            mydb = sqlite3.connect("steam.db")
-            cursor = mydb.cursor();
-            cursor.execute(sql)      
-            data = cursor.fetchall()
+        else:
+            return {"status":"Failure","message":"Nothing Here"}
             
-            gameList = []
-            temp = ""
-            count = 0
-            gameData = {}
-            RankInfo = []
-            if data:
-                for row in data:
-                    if temp != datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m"):
-                        temp == datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
-                        gameData['Month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
-                    
-                    gameInfo = {}
-                    gameInfo['type'] = row[1]
-                    gameInfo['count'] = row[2]
-                    gameInfo['rank'] = row[3]
-                    RankInfo.append(gameInfo)
-                    count += 1
-                    
-                    if count == 10:
-                        gameData['RankInfo'] = RankInfo
-                        RankInfo = []
-                        gameList.append(gameData)
-                        gameData = {}
-                        count = 0
-                       
-                data =  {"Top10 Most Player - Type":{"status":"Success","product":gameList}}, 200
-                response = make_response(json.dumps(data, ensure_ascii=False), 200)
-                response.headers['Content-Type'] = 'application/json; charset=utf-8'
-                mydb.close()
-                return response
-            else:
-                mydb.close()
-                return {"Top10 Most Player - Type":{"status":"Failure","message":"Nothing Here"}}, 403      
+        mydb = sqlite3.connect("steam.db")
+        cursor = mydb.cursor();
+        cursor.execute(sql)      
+        data = cursor.fetchall()
+        
+        gameList = []
+        temp = ""
+        count = 0
+        gameData = {}
+        RankInfo = []
+        if data:
+            for row in data:
+                if temp != datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m"):
+                    temp == datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
+                    gameData['Month'] = datetime.strptime(row[4], "%Y-%m-%d").strftime("%Y-%m")
+                
+                gameInfo = {}
+                gameInfo['type'] = row[1]
+                gameInfo['count'] = row[2]
+                gameInfo['rank'] = row[3]
+                RankInfo.append(gameInfo)
+                count += 1
+                
+                if count == 10:
+                    gameData['RankInfo'] = RankInfo
+                    RankInfo = []
+                    gameList.append(gameData)
+                    gameData = {}
+                    count = 0
+        
+
+            data = {"status":"Success","product":gameList}
+            response = make_response(json.dumps(data, ensure_ascii=False), 200)
+            response.headers['Content-Type'] = 'application/json; charset=utf-8'
+            mydb.close()
+            return response
+        else:
+            mydb.close()
+            return {"status":"Failure","message":"Nothing Here"}
     
+        
+            
     elif gt == "price":
         if sm == "topSeller":
             sql = "SELECT * FROM `topsellpricepie` order by month desc"
-            mydb = sqlite3.connect("steam.db")
-            cursor = mydb.cursor();
-            cursor.execute(sql)      
-            data = cursor.fetchall()
-            
-            gameList = []
-            temp = ""
-            count = 0
-            gameData = {}
-            RankInfo = []
-            if data:
-                for row in data:
-                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
-                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    
-                    gameInfo = {}
-                    gameInfo['type'] = row[1]
-                    gameInfo['percent'] = row[2]
-                    RankInfo.append(gameInfo)
-                    count += 1
-                    
-                    if count == 3:
-                        gameData['RankInfo'] = RankInfo
-                        RankInfo = []
-                        gameList.append(gameData)
-                        gameData = {}
-                        count = 0
-            
-
-                data = {"Percentage of Top Seller Price Type":{"status":"Success","product":gameList}}, 200
-                response = make_response(json.dumps(data, ensure_ascii=False), 200)
-                response.headers['Content-Type'] = 'application/json; charset=utf-8'
-                mydb.close()
-                return response
-            else:
-                mydb.close()
-                return {"Percentage of Top Seller Price Type":{"status":"Failure","message":"Nothing Here"}}, 403
-        
         elif sm == "mostPlayer":
-            sql = "SELECT * FROM `mostplaypricepie` order by month desc"
-            mydb = sqlite3.connect("steam.db")
-            cursor = mydb.cursor();
-            cursor.execute(sql)      
-            data = cursor.fetchall()
+            sql = "SELECT * FROM `mostplaypricepie` order by month desc"    
+        else:
+            return {"status":"Failure","message":"Nothing Here"}
             
-            gameList = []
-            temp = ""
-            count = 0
-            gameData = {}
-            RankInfo = []
-            if data:
-                for row in data:
-                    if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
-                        temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                        gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
-                    
-                    gameInfo = {}
-                    gameInfo['type'] = row[1]
-                    gameInfo['percent'] = row[2]
-                    RankInfo.append(gameInfo)
-                    count += 1
-                    
-                    if count == 3:
-                        gameData['RankInfo'] = RankInfo
-                        RankInfo = []
-                        gameList.append(gameData)
-                        gameData = {}
-                        count = 0
-            
+        mydb = sqlite3.connect("steam.db")
+        cursor = mydb.cursor();
+        cursor.execute(sql)      
+        data = cursor.fetchall()
+        
+        gameList = []
+        temp = ""
+        count = 0
+        gameData = {}
+        RankInfo = []
+        if data:
+            for row in data:
+                if temp != datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m"):
+                    temp == datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                    gameData['Month'] = datetime.strptime(row[3], "%Y-%m-%d").strftime("%Y-%m")
+                
+                gameInfo = {}
+                gameInfo['type'] = row[1]
+                gameInfo['percent'] = row[2]
+                RankInfo.append(gameInfo)
+                count += 1
+                
+                if count == 3:
+                    gameData['RankInfo'] = RankInfo
+                    RankInfo = []
+                    gameList.append(gameData)
+                    gameData = {}
+                    count = 0
+        
 
-                data = {"Percentage of Most Player Price Type":{"status":"Success","product":gameList}}
-                response = make_response(json.dumps(data, ensure_ascii=False), 200)
-                response.headers['Content-Type'] = 'application/json; charset=utf-8'
-                mydb.close()
-                return response
-            else:
-                mydb.close()
-                return {"Percentage of Most Player Price Type":{"status":"Failure","message":"Nothing Here"}}, 403      
-
-
+            data = {"status":"Success","product":gameList}
+            response = make_response(json.dumps(data, ensure_ascii=False), 200)
+            response.headers['Content-Type'] = 'application/json; charset=utf-8'
+            mydb.close()
+            return response
+        else:
+            mydb.close()
+            return {"status":"Failure","message":"Nothing Here"}
+    else:
+        return {"status":"Failure","message":"Nothing Here"}
+    
 if __name__ == "__main__":
     app.run(debug=True)
