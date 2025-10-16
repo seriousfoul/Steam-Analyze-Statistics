@@ -85,9 +85,10 @@ def topGameToday(dbTable):
                 img = row.find("img").get("src")          # 遊戲圖片網址
                 name = row.find("span", class_="title").text                # 遊戲名稱
                 name = name.replace("'","")                                 # 去掉90`s之類的名稱
-                prices = row.find("div", class_="discount_prices").text     # 遊戲原價
-                if prices is None:
+                if row.find("div", class_="discount_prices") is None:
                     continue
+                prices = row.find("div", class_="discount_prices").text     # 遊戲原價
+                
                 sale = 0
  
                 
