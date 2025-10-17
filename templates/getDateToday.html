@@ -14,7 +14,9 @@
             <div class="logo">
                 <a href="/"> <img src="/static/img/logo.png" ></a>
             </div>
-            <span>Steam 遊戲統計與圖表視覺化</span> 
+            <a href="/">
+                <span>Steam 遊戲統計與圖表視覺化</span> 
+            </a>
             <div class="steamlogo">
                 <a href="https://store.steampowered.com/"> <img src="/static/img/New_Steam_Logo_with_name.jpg" ></a>
             </div>
@@ -47,7 +49,7 @@
                     </div>
                     <a href="{{row[6]}}">
                         <div class="gameTitle">
-                            <p>今日排名：{{row[5]}}</p>
+                            <span style="color:#ff0000">今日排名：{{row[5]}}</span>
                             <span>遊戲名稱：{{row[1]}}</span>
                             {% if row[3] != 0 %}
                                 <span>遊戲原價：NT$ {{row[3]}}</span>
@@ -56,6 +58,8 @@
                             {% endif %}
                             {% if row[4] != 0 %}
                                 <span>遊戲特價：NT$ {{row[4]}}</span>
+                            {% else %}
+                                <span>遊戲特價：無</span>
                             {% endif %}
                         </div>
                     </a>

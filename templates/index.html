@@ -15,7 +15,9 @@
             <div class="logo">
                 <a href="/"> <img src="/static/img/logo.png" ></a>
             </div>
-            <span>Steam 遊戲統計與圖表視覺化</span> 
+            <a href="/"> 
+                <span>Steam 遊戲統計與圖表視覺化</span> 
+            </a>
             <div class="steamlogo">
                 <a href="https://store.steampowered.com/"> <img src="/static/img/New_Steam_Logo_with_name.jpg" ></a>
             </div>
@@ -49,7 +51,7 @@
             
                 <!-- 顯示 本月前5名 暢銷遊戲 -->
                 <div class="viewData">                    
-                    <h2>本月前5名 暢銷遊戲</h2>
+                    <p>本月前5名 暢銷遊戲</p>
                     {% if top5SellGame %}
                     <div class="rowData">
                     
@@ -63,13 +65,13 @@
                         </div>
                         
                         <div class="rowText">
-                            <span style="width: 25%">本月排名</span>                      
-                            <span style="width: 75%">遊戲名稱</span>                                   
+                            <span>本月排名</span>                      
+                            <span style="width: 65%">遊戲名稱</span>                                   
 
                             {% for row in top5SellGame %}
                                 <a href="{{row[5]}}">
                                     <span>{{row[2]}}</span>
-                                    <span style="width: 75%">{{row[1]}}</span>                            
+                                    <span style="width: 65%">{{row[1]}}</span>                            
                                 </a>
                             {% endfor %}
                         </div>
@@ -89,7 +91,7 @@
                 <!-- 顯示 本月前10名 暢銷遊戲 類型-->
                 <div class="viewData">
                               
-                    <h2>本月前10名 暢銷遊戲 - 類型</h2>
+                    <p>本月前10名 暢銷遊戲 - 類型</p>
                     {% if top10SellGameType %}  
                     <div class="rowData">
                     
@@ -121,7 +123,7 @@
                 
                 <!-- 顯示 本月 暢銷遊戲 價格類型比例-->
                 <div class="viewData">                    
-                    <h2>本月 暢銷遊戲 價格類型比例</h2>
+                    <p>本月 暢銷遊戲 價格類型比例</p>
                     {% if topSellPricePie %} 
                     <div class="rowData">
                     
@@ -164,7 +166,7 @@
                 <!-- 顯示 本月前5名 最多人遊玩 -->
                 <div class="viewData">
                     
-                    <h2>本月前5名 最多人遊玩</h2>
+                    <p>本月前5名 最多人遊玩</p>
                     {% if top5PeopleGame %} 
                     <div class="rowData">
                     
@@ -178,13 +180,13 @@
                         </div>
                         
                         <div class="rowText">
-                            <span style="width: 25%">本月排名</span>                      
-                            <span style="width: 75%">遊戲名稱</span>                                   
+                            <span >本月排名</span>                      
+                            <span style="width: 65%">遊戲名稱</span>                                   
 
                             {% for row in top5PeopleGame %}
                                 <a href="{{row[5]}}">
                                     <span>{{row[2]}}</span>
-                                    <span style="width: 75%">{{row[1]}}</span>                            
+                                    <span style="width: 65%">{{row[1]}}</span>                            
                                 </a>
                             {% endfor %}
                         </div>
@@ -203,7 +205,7 @@
                    
                 <!-- 顯示 本月前10名 暢銷遊戲 類型-->
                 <div class="viewData">                    
-                    <h2>本月前10名 最多人遊玩 - 類型</h2>
+                    <p>本月前10名 最多人遊玩 - 類型</p>
                     {% if top10PeopleGameType %}
                     <div class="rowData">
                     
@@ -234,7 +236,7 @@
                 
                 <!-- 顯示 本月 暢銷遊戲 價格類型比例-->
                 <div class="viewData">                    
-                    <h2>本月 暢銷遊戲 價格類型比例</h2>
+                    <p>本月 暢銷遊戲 價格類型比例</p>
                     {% if top10PeopleGameType %}
                     <div class="rowData">
                     
