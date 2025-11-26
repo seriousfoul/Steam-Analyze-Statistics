@@ -93,7 +93,7 @@ def viewTopGame(tableName):
     
     cursor = mydb.cursor()
     cursor.execute(sql)
-    data = cursor.fetchall()         
+    data = cursor.fetchall()
      
     cursor.close()  
     return data

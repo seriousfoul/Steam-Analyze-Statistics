@@ -29,9 +29,9 @@ def markCloud(dbtable):
     
     
     if dbtable == "topsellers":
-        image_path = '../wwwroot/img/topsellers_cloud.png' 
+        image_path = './static/img/topsellers_cloud.png' 
     elif dbtable == "mostplayed":
-        image_path = '../wwwroot/img/mostplay_cloud.png'
+        image_path = './static/img/mostplay_cloud.png'
     cloud.to_file(image_path) # 讓文字雲存檔
     
     cursor.close()

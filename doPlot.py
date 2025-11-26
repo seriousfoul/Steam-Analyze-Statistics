@@ -11,7 +11,7 @@ import matplotlib
 def linePlot(Plot, tableName , today):
 
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="../wwwroot/font/kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
 
     plt.legend(handles = Plot, prop = chinese_font)
     plt.gca().invert_yaxis()  # 反轉 Y 軸
@@ -22,7 +22,7 @@ def linePlot(Plot, tableName , today):
     
     pltname = tableName.upper() + " - line"
     plt.tick_params(axis='both' ,labelsize=12, color = 'darkblue')  
-    plt.savefig(f'../wwwroot/img/{pltname}.png')
+    plt.savefig(f'./static/img/{pltname}.png')
     plt.clf()
     plt.close()   
 
@@ -66,7 +66,7 @@ def barPlot(dictData, tableName, today):
     plt.bar(typeDf['typeName'], typeDf['typeCount'], tick_label = typeDf['typeName'], width=0.5)
     
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="../wwwroot/font/kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
     
     plt.title(pltname, fontsize= 40, color= "darkblue", fontproperties=chinese_font)
     plt.xlabel('Type', fontsize=20, color="darkblue", fontproperties=chinese_font)
@@ -75,7 +75,7 @@ def barPlot(dictData, tableName, today):
     plt.tick_params(axis='both' ,labelsize=12, color = 'darkblue')   
     
     pltname = tableName.upper() + "(Type) - bar"
-    plt.savefig(f'../wwwroot/img/{pltname}.png')
+    plt.savefig(f'./static/img/{pltname}.png')
     plt.clf()
     plt.close()
     
@@ -137,7 +137,7 @@ def piePlot(tableName, today):
                 shadow=True
                 )
     
-    chinese_font = matplotlib.font_manager.FontProperties(fname="../wwwroot/font/kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
     
     pltname = "{} ".format(today.strftime("%Y-%m -")) + tableName.upper() + "(Price) - pie"
     plt.title(pltname, fontsize= 12, color= "darkblue", x=0.5, y=1, fontproperties=chinese_font)
@@ -145,7 +145,7 @@ def piePlot(tableName, today):
     plt.legend(loc = 'upper right', prop = chinese_font)
     
     pltname = tableName.upper() + "(Price) - pie"
-    plt.savefig(f'../wwwroot/img/{pltname}.png')
+    plt.savefig(f'./static/img/{pltname}.png')
     plt.clf()
     plt.close()
 
