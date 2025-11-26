@@ -16,7 +16,7 @@ def gameType(dataTable, name, link, date):
 
     data = requests.get(url, headers = header)
     data.encoding="utf-8"
-    data = data.text    
+    data = data.text
     soup = BeautifulSoup(data, "html.parser")
 
     typeInfo = soup.find("div", class_="glance_tags popular_tags")
@@ -24,14 +24,14 @@ def gameType(dataTable, name, link, date):
     if typeInfo.find("a") == None:
         return ""
     else:
-        typeInfos = typeInfo.find_all("a")       
+        typeInfos = typeInfo.find_all("a")
     
     typeData = ""
     for a in typeInfos:
-        typeData += a.text.strip().replace("'", "")        
-        typeData += ","        
+        typeData += a.text.strip().replace("'", "")
+        typeData += ","
     typeData = typeData[:-1]
-    print("取得遊戲類別") 
+    print("取得遊戲類別")
         
     return typeData
 

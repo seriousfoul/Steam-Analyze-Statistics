@@ -8,8 +8,8 @@ Created on Fri Jun 27 20:13:33 2025
 from bs4 import BeautifulSoup
 from datetime import datetime
 import time
-# import mysqlDb
-import sqlite3
+from mysqlDb import mydb
+# import sqlite3
 import requests
 import findGameType
 
@@ -23,8 +23,8 @@ def topGameToday(dbTable):
     
     sql = "select * from {} where date = '{}' \
         limit 10".format(dbTable, datetime.strftime(datetime.today(), "%Y-%m-%d"))
-        
-    mydb = sqlite3.connect("steam.db")
+    
+    
     cursor = mydb.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -35,7 +35,7 @@ def topGameToday(dbTable):
         else:            
             print("沒資料")  
             
-            cursor = mydb.cursor()   
+            cursor = mydb.cursor()  
             
             url = f"https://store.steampowered.com/search/?filter=global{dbTable}" 
             

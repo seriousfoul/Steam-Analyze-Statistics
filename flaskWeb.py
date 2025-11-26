@@ -1,5 +1,5 @@
-# import mysqlDb
-import sqlite3
+from mysqlDb import mydb
+# import sqlite3
 
 from flask import Flask, render_template, request, make_response
 from flask_paginate import Pagination, get_page_parameter
@@ -22,7 +22,7 @@ def getData(tableName, funcWork): #tableName為資料表名稱，funWork為執�
     sql = "select count(id) as GameCount from {} where date = '{}'".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-%d"))
 
     
-    mydb = sqlite3.connect("steam.db")
+    # mydb = sqlite3.connect("steam.db")
     cursor = mydb.cursor()
     cursor.execute(sql)
     gameCount = int(cursor.fetchone()[0])

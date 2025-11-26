@@ -1,8 +1,8 @@
 import mysql.connector
 
 mydb =  mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='1234567890',
+    host='sas.mysql.database.azure.com',
+    user='seriousfoul',
+    password='Hunter777+',
     database='steam'
     )

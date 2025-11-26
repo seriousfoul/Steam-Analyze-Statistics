@@ -1,5 +1,5 @@
-# import mysqlDb
-import sqlite3
+from mysqlDb import mydb
+# import sqlite3
 
 from datetime import datetime
 
@@ -11,7 +11,7 @@ import matplotlib
 def linePlot(Plot, tableName , today):
 
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="../wwwroot/font/kaiu.ttf")
 
     plt.legend(handles = Plot, prop = chinese_font)
     plt.gca().invert_yaxis()  # 反轉 Y 軸
@@ -20,8 +20,9 @@ def linePlot(Plot, tableName , today):
     plt.xlabel('Date', fontsize=15, color="darkblue", fontproperties=chinese_font)
     plt.ylabel('Rank', fontsize=15, color="darkblue", fontproperties=chinese_font)
     
-    plt.tick_params(axis='both' ,labelsize=12, color = 'darkblue')    
-    plt.savefig(f'static/img/{pltname}.png')
+    pltname = tableName.upper() + " - line"
+    plt.tick_params(axis='both' ,labelsize=12, color = 'darkblue')  
+    plt.savefig(f'../wwwroot/img/{pltname}.png')
     plt.clf()
     plt.close()   
 
@@ -45,7 +46,7 @@ def barPlot(dictData, tableName, today):
             toTable = "top10peoplegametype"
             sql = "select * from {} where month = '{}' and `rank` = '{}'".format(toTable, today.strftime("%Y-%m-01"), time+1)
         
-        mydb = sqlite3.connect("steam.db")
+
         cursor = mydb.cursor()
         cursor.execute(sql)
         
@@ -65,14 +66,16 @@ def barPlot(dictData, tableName, today):
     plt.bar(typeDf['typeName'], typeDf['typeCount'], tick_label = typeDf['typeName'], width=0.5)
     
     # 中文字體
-    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="../wwwroot/font/kaiu.ttf")
     
-    plt.title(pltname, fontsize= 35, color= "darkblue", fontproperties=chinese_font)
+    plt.title(pltname, fontsize= 40, color= "darkblue", fontproperties=chinese_font)
     plt.xlabel('Type', fontsize=20, color="darkblue", fontproperties=chinese_font)
     plt.ylabel('Count', fontsize=20, color="darkblue", fontproperties=chinese_font)
     plt.xticks(rotation=20)
-    plt.tick_params(axis='both' ,labelsize=12, color = 'darkblue')    
-    plt.savefig(f'static/img/{pltname}.png')
+    plt.tick_params(axis='both' ,labelsize=12, color = 'darkblue')   
+    
+    pltname = tableName.upper() + "(Type) - bar"
+    plt.savefig(f'../wwwroot/img/{pltname}.png')
     plt.clf()
     plt.close()
     
@@ -81,7 +84,7 @@ def barPlot(dictData, tableName, today):
 def piePlot(tableName, today):
     sql = "select price, sale from {} where date >= {}".format(tableName, today.strftime("%Y-%m-01"))
     
-    mydb = sqlite3.connect("steam.db")
+
     cursor = mydb.cursor()
     cursor.execute(sql)
     price = {'free':0, 'price':0, 'sale':0}
@@ -106,7 +109,7 @@ def piePlot(tableName, today):
             toTable = "mostplaypricepie"
             sql = "select * from {} where month = '{}' and type = '{}'".format(toTable, today.strftime("%Y-%m-01"), priceDf['priceType'][time])
         
-        mydb = sqlite3.connect("steam.db")
+
         cursor = mydb.cursor()
         cursor.execute(sql)
         sumNum = sum(priceDf['count'])    
@@ -134,13 +137,15 @@ def piePlot(tableName, today):
                 shadow=True
                 )
     
-    chinese_font = matplotlib.font_manager.FontProperties(fname="./static/font/kaiu.ttf")
+    chinese_font = matplotlib.font_manager.FontProperties(fname="../wwwroot/font/kaiu.ttf")
     
     pltname = "{} ".format(today.strftime("%Y-%m -")) + tableName.upper() + "(Price) - pie"
     plt.title(pltname, fontsize= 12, color= "darkblue", x=0.5, y=1, fontproperties=chinese_font)
     
     plt.legend(loc = 'upper right', prop = chinese_font)
-    plt.savefig(f'static/img/{pltname}.png')
+    
+    pltname = tableName.upper() + "(Price) - pie"
+    plt.savefig(f'../wwwroot/img/{pltname}.png')
     plt.clf()
     plt.close()
 
@@ -151,9 +156,8 @@ def markPlot(dbTable):
     now = datetime.today()
     
     # 搜尋當月上榜最多的前5筆資料
-    sql = 'select *,count(name) as time from `{}` where date >= "{}" Group by name Order by time DESC limit 5'.format(dbTable, now.strftime("%Y-%m-01"))
-    
-    mydb = sqlite3.connect("steam.db")
+    sql = 'select name,type,price,count(`name`) as time from `{}` where date >= "{}" Group by name,type,price Order by time desc, avg(`rank`) asc limit 5'.format(dbTable, now.strftime("%Y-%m-01"))
+
     cursor = mydb.cursor()
     cursor.execute(sql)
     info = cursor.fetchall()
@@ -162,10 +166,10 @@ def markPlot(dbTable):
     gameList = []
     for row in info:
         gameNameData = {}
-        gameNameData["name"] = row[1]
-        gameNameData["type"] = row[7]
+        gameNameData["name"] = row[0]
+        gameNameData["type"] = row[1]
         gameNameData['price'] = row[2]
-        sql = "select `rank`, sale, date from {} where date >= '{}' and name = '{}'".format(dbTable, now.strftime("%Y-%m-01"), row[1])
+        sql = "select `rank`, sale, date from {} where date >= '{}' and name = '{}'".format(dbTable, now.strftime("%Y-%m-01"), row[0])
         cursor.execute(sql)
         rowInfo = cursor.fetchall()
         
@@ -174,7 +178,7 @@ def markPlot(dbTable):
             gameInfo = {}
             gameInfo['rank'] = col[0]
             gameInfo['sale'] = col[1]
-            gameInfo['date'] = datetime.strptime(col[2], "%Y-%m-%d").strftime("%d")
+            gameInfo['date'] = col[2].strftime("%d");
             gameInfoList.append(gameInfo)
             
         
@@ -182,6 +186,7 @@ def markPlot(dbTable):
         
         gameList.append(gameNameData)
     
+
     # 資料由 Json 轉成 pandas
     gameListDf = pd.DataFrame(gameList)
     
@@ -216,7 +221,6 @@ def markPlot(dbTable):
             toTable = "top5peoplegame"
             sql = "select id from {} where month = '{}' and `rank` = '{}'".format(toTable, now.strftime("%Y-%m-01"), time+1)
         
-        mydb = sqlite3.connect("steam.db")
         cursor = mydb.cursor()
         cursor.execute(sql)
 
@@ -235,8 +239,7 @@ def markPlot(dbTable):
     # 長方圖 - 一個月內上榜遊戲的類別比較
     typeGroup = {}
     for time in range(len(info)):
-
-        for typeName in info[time][7].split(","):
+        for typeName in info[time][1].split(","):
             if typeName in typeGroup:
                 typeGroup[typeName] += 1
             else:

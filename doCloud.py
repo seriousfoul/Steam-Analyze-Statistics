@@ -1,5 +1,5 @@
-# import mysqlDb
-import sqlite3
+from mysqlDb import mydb
+# import sqlite3
 
 from datetime import datetime
 from wordcloud import WordCloud
@@ -10,7 +10,7 @@ def markCloud(dbtable):
     
     sql = "select type from {} where date >= {}".format(dbtable, month)
     
-    mydb = sqlite3.connect("steam.db")
+
     cursor = mydb.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -29,9 +29,9 @@ def markCloud(dbtable):
     
     
     if dbtable == "topsellers":
-        image_path = 'static/img/{}_topsellers_cloud.png'.format(now.strftime("%Y-%m")) 
+        image_path = '../wwwroot/img/topsellers_cloud.png' 
     elif dbtable == "mostplayed":
-        image_path = 'static/img/{}_mostplay_cloud.png'.format(now.strftime("%Y-%m")) 
+        image_path = '../wwwroot/img/mostplay_cloud.png'
     cloud.to_file(image_path) # 讓文字雲存檔
     
     cursor.close()
