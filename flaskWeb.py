@@ -72,7 +72,7 @@ def viewType(tableName):
 
     sql = "select * from {} where month = '{}'".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-01"))
     
-    mydb = sqlite3.connect("steam.db")
+    
     cursor = mydb.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -85,9 +85,12 @@ def viewTopGame(tableName):
 
     # 搜尋 tableName 的全部 並把 tableName 沒有的資料，
     # name、image(第一名)、link 從大表 由name聚合 加入 tableName
-    sql = "SELECT g.*, s.image, s.link FROM {} as g LEFT JOIN ( select name, min(image) as image, link from topsellers GROUP BY name) as s on g.name = s.name  where month = '{}' ".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-01"))
+    if (tableName == "top5sellgame"):
+        sql = "SELECT g.*, s.image, s.link FROM {} as g LEFT JOIN ( select name, min(image) as image, link from topsellers where link like '%global%' GROUP BY name, link ) as s on g.name = s.name  where month = '{}' ".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-01"))
+    else:
+        sql = "SELECT g.*, s.image, s.link FROM {} as g LEFT JOIN ( select name, min(image) as image, link from mostplayed where link like '%/?snr%' GROUP BY name, link ) as s on g.name = s.name  where month = '{}' ".format(tableName, datetime.strftime(datetime.today(), "%Y-%m-01"))
+
     
-    mydb = sqlite3.connect("steam.db")
     cursor = mydb.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()         
@@ -143,7 +146,7 @@ def feedback():
         contant = request.form.get('contant')
 
         sql = "insert into feedback (name,email,title,contant) values ('{}','{}','{}','{}')".format(name, email, title, contant)
-        mydb = sqlite3.connect("steam.db")
+        
         cursor = mydb.cursor()
         cursor.execute(sql)
         mydb.commit()
@@ -193,7 +196,7 @@ def api2(gt, sm):
         else:
             return {"status":"Failure","message":"Nothing Here"}
             
-        mydb = sqlite3.connect("steam.db")
+        
         cursor = mydb.cursor()
         cursor.execute(sql)      
         data = cursor.fetchall()
@@ -240,7 +243,6 @@ def api2(gt, sm):
         else:
             return {"status":"Failure","message":"Nothing Here"}
             
-        mydb = sqlite3.connect("steam.db")
         cursor = mydb.cursor();
         cursor.execute(sql)      
         data = cursor.fetchall()
@@ -290,7 +292,7 @@ def api2(gt, sm):
         else:
             return {"status":"Failure","message":"Nothing Here"}
             
-        mydb = sqlite3.connect("steam.db")
+
         cursor = mydb.cursor();
         cursor.execute(sql)      
         data = cursor.fetchall()
