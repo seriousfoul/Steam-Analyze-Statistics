@@ -5,4 +5,4 @@ mydb =  mysql.connector.connect(
     user='seriousfoul',
     password='Hunter777+',
     database='steam'
-    )
+    )    
