@@ -237,14 +237,21 @@ def markPlot(dbTable):
     
 
     # 長方圖 - 一個月內上榜遊戲的類別比較
+    sql = 'select type from `{}` where date >= "{}"'.format(dbTable, now.strftime("%Y-%m-01"))
+
+    cursor = mydb.cursor()
+    cursor.execute(sql)
+    typeInfo = cursor.fetchall()    
+    
     typeGroup = {}
-    for time in range(len(info)):
-        for typeName in info[time][1].split(","):
+    for record in typeInfo:
+        for typeName in record[0].split(","):
             if typeName in typeGroup:
                 typeGroup[typeName] += 1
             else:
                 typeGroup[typeName] = 1
-
+                
+    cursor.close()
     barPlot(typeGroup, dbTable, now)
 
     # 圓餅圖 - 特價與免費與沒有特價的比例
